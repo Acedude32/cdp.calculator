@@ -61,8 +61,6 @@ public class Calculator {
         for (int i = stack.size() - 1; i >= 0; i--) {
             parsed.add(stack.get(i));
         }
-        System.out.println("parsed input: " + parsed.toString());
-
         return parsed;
     }
 

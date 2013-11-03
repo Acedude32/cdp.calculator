@@ -17,18 +17,19 @@ public class Launcher {
 //        String input = "2 - 1 * 3 - 1 / 4"; // -1.25
 //      String input = "2 * 3 - 1 + 5 / 4"; // 6.25
 //      String input = "6 - 1 + 2"; // 7
-  
-        String input = args[0];
+
+        final String input = System.getenv("input"); //getting input
         Calculator calc = new Calculator();
         float result = 0;
+        try {
             result = calc.calculate(input);
-
-            System.out.println("result : " + result);
-
             DecimalFormatSymbols dfs = new DecimalFormatSymbols();
             dfs.setDecimalSeparator('.');
             DecimalFormat df = new DecimalFormat("#.00", dfs);
+            System.out.print(df.format(result));
+        } catch (Exception e) {
+            System.out.println("Fail");
+        }
 
-            System.out.println("formatted result: " + df.format(result));
     }
 }
