@@ -25,15 +25,18 @@ public class Calculator {
         return result;
     }
 
+    //TODO Throw a runtime exception with information about position where operation is incorrect.
     private boolean validate(String input) {
         
         // check if input == null
-        if (input == null) {
+        if (input == null) {    //TODO Better to throw an exception here.
             return false;
         }
         
         // check if there is no operator between two numbers 
-        String regex = "\\d\\s+\\d";
+        String regex = "\\d\\s+\\d";        // This regex doesn't check what you need. It checks only spaces between digits...
+                                            // The main idea was to go through entities using mather.
+                                            // TODO Write correct regex, if possible, to check whole string for errors.
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);
         if (matcher.find()) {
@@ -44,6 +47,7 @@ public class Calculator {
         // TODO maybe need more validation cases
     }
 
+    //TODO Please, refactor this method. Cut it into methods. This will increase readability and flexibility.
     private List<String> parse(String input) {
         List<String> stack = new ArrayList<String>();
         List<String> parsed = new ArrayList<String>();
@@ -70,7 +74,7 @@ public class Calculator {
                 lastParsedIsDigit = false;
                 
             } else {
-                throw new IllegalArgumentException();
+                throw new IllegalArgumentException();   //TODO Add variable to count your current position and place this information into exception message
             }
         }
         
@@ -88,20 +92,20 @@ public class Calculator {
 
     private boolean newOperatorHasSameOrLowerPriority(String newOperator, String last) {
 
-        return (newOperator.equals("*") || newOperator.equals("/")) && (last.equals("*") || last.equals("/"))
-                || (newOperator.equals("+") || newOperator.equals("-")) && (last.equals("+") || last.equals("-"))
+        return (newOperator.equals("*") || newOperator.equals("/")) && (last.equals("*") || last.equals("/"))       //TODO Rewrite this logic. Very difficult to read and not flexible.
+                || (newOperator.equals("+") || newOperator.equals("-")) && (last.equals("+") || last.equals("-"))   //TODO Create constants
                 || (newOperator.equals("+") || newOperator.equals("-")) && (last.equals("*") || last.equals("/"));
     }
 
     private boolean isOperation(char ch) {
-        if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {
+        if (ch == '+' || ch == '-' || ch == '*' || ch == '/') {     //TODO Use list of objects (or at least chars) to check whether it supported operation or not.
             return true;
         }
         return false;
     }
 
     private boolean isOperation(String s) {
-        if ("+".equals(s) || "-".equals(s) || "*".equals(s) || "/".equals(s)) {
+        if ("+".equals(s) || "-".equals(s) || "*".equals(s) || "/".equals(s)) { //TODO The same as in previous method.
             return true;
         }
         return false;
@@ -112,11 +116,12 @@ public class Calculator {
         while (parsed.size() > 1) {
             for (int i = 0; i < parsed.size(); i++) {
                 String element = parsed.get(i);
-                if (isOperation(element)) {
+                if (isOperation(element)) {         //TODO Place everything from this if statement into method.
                     float n1 = Float.valueOf(parsed.get(i - 2));
                     float n2 = Float.valueOf(parsed.get(i - 1));
 
-                    if ("+".equals(element)) {
+                    if ("+".equals(element)) {      //TODO Rewrite this ifs. You can use switches, but it would be better to use objects in list
+                                                    //TODO which can check whether this operation is supported and calculate it.
                         result = n1 + n2;
                         changeParsed(parsed, i, result);
                         break;
