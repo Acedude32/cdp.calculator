@@ -1,67 +1,96 @@
 package cdp.modul5.calculator;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Calculator {
 
-    public float calculate(String input) {
-        input = input.replaceAll("\\s+", "");
+    public String calculate(String input) {
+        String result = "Fail";
         if (validate(input)) {
-            List<String> parsed = parse(input);
-            float result = count(parsed);
-            return result;
-        } else {
-            throw new IllegalArgumentException();
+            input = input.replaceAll("\\s+", "");
+            try {
+                List<String> parsed = parse(input);
+                result = calculateParsed(parsed);
+
+            } catch (Exception e) {
+                return result;
+            }
         }
+        return result;
     }
 
     private boolean validate(String input) {
-        // TODO validation;
+        
+        // check if input == null
+        if (input == null) {
+            return false;
+        }
+        
+        // check if there is no operator between two numbers 
+        String regex = "\\d\\s+\\d";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(input);
+        if (matcher.find()) {
+            return false;
+        }
+        
         return true;
+        // TODO maybe need more validation cases
     }
 
     private List<String> parse(String input) {
         List<String> stack = new ArrayList<String>();
         List<String> parsed = new ArrayList<String>();
-        boolean digit = false;
+        boolean lastParsedIsDigit = false;
         for (int i = 0; i < input.length(); i++) {
             char ch = input.charAt(i);
             if (Character.isDigit(ch)) {
-                if (digit) {
-                    String digitValue = parsed.get(parsed.size() - 1);
-                    digitValue = digitValue + ch;
-                    parsed.set(parsed.size() - 1, digitValue);
+                if (lastParsedIsDigit) {
+                    processDigit(parsed, ch);
                 } else {
                     parsed.add(String.valueOf(ch));
-                    digit = true;
+                    lastParsedIsDigit = true;
                 }
             } else if (isOperation(ch)) {
                 String newOperator = String.valueOf(ch);
 
                 if (stack.size() > 0) {
-
-//                    String last = stack.get(stack.size() - 1);
-
-                    if ((newOperator.equals("+") || newOperator.equals("-"))) {
-                        for (int j = stack.size() - 1; j >= 0; j--) {
-                            parsed.add(stack.get(j));
-                        }
-                        stack.clear();
+                    while (!stack.isEmpty() && newOperatorHasSameOrLowerPriority(newOperator, stack.get(stack.size() - 1)) ) {
+                        parsed.add(stack.get(stack.size() - 1));
+                        stack.remove(stack.size() - 1);
                     }
-                }
+                } 
                 stack.add(newOperator);
-                digit = false;
+                lastParsedIsDigit = false;
+                
             } else {
                 throw new IllegalArgumentException();
-                // TODO remove it after validation creation
-
             }
         }
-        for (int i = stack.size() - 1; i >= 0; i--) {
-            parsed.add(stack.get(i));
-        }
+        
+        Collections.reverse(stack);
+        parsed.addAll(stack);
+
         return parsed;
+    }
+
+    private void processDigit(List<String> parsed, char ch) {
+        String digitValue = parsed.get(parsed.size() - 1);
+        digitValue = digitValue + ch;
+        parsed.set(parsed.size() - 1, digitValue);
+    }
+
+    private boolean newOperatorHasSameOrLowerPriority(String newOperator, String last) {
+
+        return (newOperator.equals("*") || newOperator.equals("/")) && (last.equals("*") || last.equals("/"))
+                || (newOperator.equals("+") || newOperator.equals("-")) && (last.equals("+") || last.equals("-"))
+                || (newOperator.equals("+") || newOperator.equals("-")) && (last.equals("*") || last.equals("/"));
     }
 
     private boolean isOperation(char ch) {
@@ -78,7 +107,7 @@ public class Calculator {
         return false;
     }
 
-    private float count(List<String> parsed) {
+    private String calculateParsed(List<String> parsed) {
         float result = 0;
         while (parsed.size() > 1) {
             for (int i = 0; i < parsed.size(); i++) {
@@ -110,7 +139,12 @@ public class Calculator {
                 }
             }
         }
-        return result;
+
+        DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+        dfs.setDecimalSeparator('.');
+        DecimalFormat df = new DecimalFormat("0.00", dfs);
+
+        return df.format(result);
     }
 
     private void changeParsed(List<String> parsed, int i, float result) {
