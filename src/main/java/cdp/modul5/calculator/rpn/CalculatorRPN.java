@@ -18,7 +18,7 @@ public class CalculatorRPN implements ICalculator{
 
     public float calculate(String input) {
         float result = 0;
-        validate(input);
+        //validate(input);
         List<String> parsed = parser.parse(input);
         result = calculateParsed(parsed);
         return result;

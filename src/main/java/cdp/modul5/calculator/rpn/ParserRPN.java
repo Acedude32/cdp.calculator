@@ -14,9 +14,9 @@ public class ParserRPN implements IParser {
         input = input.replaceAll("\\s+", "");
         List<String> stack = new ArrayList<String>();
         List<String> parsed = new ArrayList<String>();
-        
+
         process(input, parsed, stack);
-        
+
         return parsed;
     }
     private void process(String input, List<String> parsed, List<String> stack) {
@@ -31,11 +31,16 @@ public class ParserRPN implements IParser {
                 processCharacter(ch, stack, parsed);
                 lastParsedIsDigit = false;
                 
-            } else {
+            } else if (ch == OPEN_BRACKET) {
+                stack.add(String.valueOf(ch));
+            } else if (ch == CLOSE_BRACKET) {
+                // TODO HERE
+            }
+            else {
                 throw new IllegalArgumentException();   //TODO Add variable to count your current position and place this information into exception message
             }
         }
-        
+
         Collections.reverse(stack);
         parsed.addAll(stack);
 

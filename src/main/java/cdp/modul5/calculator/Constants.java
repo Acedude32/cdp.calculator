@@ -10,6 +10,10 @@ public class Constants {
     public static final String OPERATION_MINUS = "-";
     public static final String OPERATION_MULTIPLY = "*";
     public static final String OPERATION_DIVISION = "/";
+
+    public static final char OPEN_BRACKET = '(';
+    public static final char CLOSE_BRACKET = '(';
+    
     
     public static final List<String> OPERATIONS = new ArrayList<String>();
     
