@@ -31,15 +31,18 @@ public class ParserRPN implements IParser {
                 processCharacter(ch, stack, parsed);
                 lastParsedIsDigit = false;
                 
-            } else if (ch == OPEN_BRACKET) {
+            } else if (ch == OPEN_BRACKET.charAt(0)) {
                 stack.add(String.valueOf(ch));
-            } else if (ch == CLOSE_BRACKET) {
-                String last = stack.get(stack.size() - 1);
-                while (!last.equals(CLOSE_BRACKET)) {
-                    parsed.add(stack.get(stack.size() - 1));
-                    stack.remove(stack.size() - 1);
-                }
-                if (last.equals(CLOSE_BRACKET)) {
+                lastParsedIsDigit = false;
+            } else if (ch == CLOSE_BRACKET.charAt(0)) {
+                lastParsedIsDigit = false;
+                while (stack.size() > 0) {
+                    String last = stack.get(stack.size() - 1);
+                    if (last.equals(OPEN_BRACKET)) {
+                        stack.remove(stack.size() - 1);
+                        break;
+                    }
+                    parsed.add(last);
                     stack.remove(stack.size() - 1);
                 }
             }
