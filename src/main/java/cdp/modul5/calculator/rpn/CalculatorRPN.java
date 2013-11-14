@@ -26,10 +26,10 @@ public class CalculatorRPN implements ICalculator{
 
     private void validate(String input) {
         checkIfNullOrEmpty(input);
-        checkExpresiionIsCorrect(input);
+        checkExpressionIsCorrect(input);
     }
 
-    private void checkExpresiionIsCorrect(String input) {
+    private void checkExpressionIsCorrect(String input) {
         String regex = "(\\s*\\d+\\s*[\\+\\-\\*\\/]\\s*){1,}\\d+\\s*";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(input);

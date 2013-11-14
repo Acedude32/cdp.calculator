@@ -34,7 +34,14 @@ public class ParserRPN implements IParser {
             } else if (ch == OPEN_BRACKET) {
                 stack.add(String.valueOf(ch));
             } else if (ch == CLOSE_BRACKET) {
-                // TODO HERE
+                String last = stack.get(stack.size() - 1);
+                while (!last.equals(CLOSE_BRACKET)) {
+                    parsed.add(stack.get(stack.size() - 1));
+                    stack.remove(stack.size() - 1);
+                }
+                if (last.equals(CLOSE_BRACKET)) {
+                    stack.remove(stack.size() - 1);
+                }
             }
             else {
                 throw new IllegalArgumentException();   //TODO Add variable to count your current position and place this information into exception message
