@@ -12,6 +12,7 @@ public class Constants {
     public static final String OPERATION_DIVISION = "/";
     public static final String OPEN_BRACKET = "(";
     public static final String CLOSE_BRACKET = ")";
+    public static final String DOT = ".";
     
     
     public static final List<String> OPERATIONS = new ArrayList<String>();

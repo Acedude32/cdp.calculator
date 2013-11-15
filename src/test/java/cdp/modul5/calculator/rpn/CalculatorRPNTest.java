@@ -111,8 +111,18 @@ public class CalculatorRPNTest {
     }
 
     @Test
-    public void testBrackets4() {
-        assertEquals(6.0, calc.calculate("(1 + 2))"), 0.01);
+    public void testFloat1() {
+        assertEquals(2.1, calc.calculate("1.0 + 1.1"), 0.01);
+    }
+    
+    @Test
+    public void testFloat2() {
+        assertEquals(2.1, calc.calculate("1 + 1.1"), 0.01);
+    }
+    
+    @Test
+    public void testFloat3() {
+        assertEquals(1.1, calc.calculate("1.0 * 1.1"), 0.01);
     }
 
 }

@@ -27,6 +27,9 @@ public class ParserRPN implements IParser {
                 processDigit(lastParsedIsDigit, parsed, ch);
                 lastParsedIsDigit = true;
 
+            } else if (ch == DOT.charAt(0)) {
+                processDigit(lastParsedIsDigit, parsed, ch);
+                
             } else if (isOperation(String.valueOf(ch))) {
                 processCharacter(ch, stack, parsed);
                 lastParsedIsDigit = false;
@@ -36,15 +39,7 @@ public class ParserRPN implements IParser {
                 lastParsedIsDigit = false;
             } else if (ch == CLOSE_BRACKET.charAt(0)) {
                 lastParsedIsDigit = false;
-                while (stack.size() > 0) {
-                    String last = stack.get(stack.size() - 1);
-                    if (last.equals(OPEN_BRACKET)) {
-                        stack.remove(stack.size() - 1);
-                        break;
-                    }
-                    parsed.add(last);
-                    stack.remove(stack.size() - 1);
-                }
+                processCloseBracket(parsed, stack);
             }
             else {
                 throw new IllegalArgumentException();   //TODO Add variable to count your current position and place this information into exception message
@@ -54,6 +49,18 @@ public class ParserRPN implements IParser {
         Collections.reverse(stack);
         parsed.addAll(stack);
 
+    }
+    
+    private void processCloseBracket(List<String> parsed, List<String> stack) {
+        while (stack.size() > 0) {
+            String last = stack.get(stack.size() - 1);
+            if (last.equals(OPEN_BRACKET)) {
+                stack.remove(stack.size() - 1);
+                break;
+            }
+            parsed.add(last);
+            stack.remove(stack.size() - 1);
+        }
     }
     
     private void processCharacter(char ch, List<String> stack, List<String> parsed) {
